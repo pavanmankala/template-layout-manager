@@ -1,4 +1,4 @@
-Initial-area: 200x300
+Initial-Area: 200x300
 
 Main-layout:\
 %-------%----------%-------%-------%-------%-------%		\
@@ -11,20 +11,21 @@ Main-layout:\
 |       |          |       |       |       |       |		\
 %-------%----------%-------%-------%-------%-------%
 
-Main-A-resize-fill: 0.1
-Main-B-resize-fill: 0.1
-Main-C-resize-fill: 0.1
-Main-D-resize-fill: 0.1
-Main-E-resize-fill: 0.3
-Main-F-resize-fill: 0.3
+Main-A-resize-Fill: 0.1
+Main-B-resize-Fill: 0.1
+Main-C-resize-Fill: 0.1
+Main-D-resize-Fill: 0.1
+Main-E-resize-Fill: 0.3
+Main-F-resize-Fill: 0.3
 
 
-Main-A-anchor: NORTH-EAST
-Main-B-anchor: NORTH-EAST
-Main-C-anchor: NORTH-EAST
-Main-D-anchor: NORTH-EAST
-Main-E-anchor: NORTH
+Main-A-Anchor: NORTH-EAST
+Main-B-Anchor: NORTH-EAST
+Main-C-Anchor: NORTH-EAST
+Main-D-Anchor: NORTH-EAST
+Main-E-Anchor: NORTH
 
+Main-A-Size: PREFERRED
 
 
 E-layout:\
@@ -36,7 +37,7 @@ E-layout:\
 |        -                |		\
 %--------%----------------%		\
 
-E-A-resize-fill: 0.2
-E-D-resize-fill: 0.8
-E-B-resize-fill: 0.5
-E-C-resize-fill: 0.5
+E-A-resize-Fill: 0.2
+E-D-resize-Fill: 0.8
+E-B-resize-Fill: 0.5
+E-C-resize-Fill: 0.5
