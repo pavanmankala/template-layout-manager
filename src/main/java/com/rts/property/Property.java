@@ -1,12 +1,17 @@
 package com.rts.property;
 
+import java.text.ParseException;
+import java.util.regex.Pattern;
+
 
 public abstract class Property<T> {
+    public static final Pattern LINE_PATTERN = Pattern.compile("^([^\\#\\n\\r][^\\n\\r]*)$", Pattern.MULTILINE);
+
     public abstract String getPropertyName();
 
     public abstract T getPropertyValue();
 
-    public abstract T setValueFromRawString(String rawValue);
+    public abstract T setValueFromRawString(String rawValue) throws ParseException;
 
     public int hashCode() {
         return getPropertyName().hashCode();

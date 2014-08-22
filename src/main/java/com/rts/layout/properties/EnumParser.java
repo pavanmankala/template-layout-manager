@@ -1,5 +1,6 @@
 package com.rts.layout.properties;
 
+import java.text.ParseException;
 import java.util.regex.Pattern;
 
 /**
@@ -17,7 +18,7 @@ public class EnumParser<T extends Enum<T>> implements GenericValueParser<T> {
     }
 
     @Override
-    public T parse(String rawString) {
+    public T parse(String rawString) throws ParseException {
         return Enum.valueOf(enumClass, HIFUN_REPLACEMENT.matcher(rawString).replaceAll("_"));
     }
 }

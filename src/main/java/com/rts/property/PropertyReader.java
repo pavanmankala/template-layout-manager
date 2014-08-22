@@ -92,7 +92,12 @@ public class PropertyReader {
                 throw new ParseException("Error in parsing property @ line: " + lineNo, lineNo);
             }
 
-            templatePropertyKey.setValueFromRawString(propValueBuilder.toString());
+            try {
+                templatePropertyKey.setValueFromRawString(propValueBuilder.toString());
+            } catch (ParseException e) {
+                throw e;
+            }
+
             propValueBuilder.setLength(0);
 
             retList.add(templatePropertyKey);

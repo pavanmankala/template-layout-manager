@@ -3,6 +3,8 @@
  */
 package com.rts.layout.properties;
 
+import java.text.ParseException;
+
 import com.rts.property.Property;
 
 /**
@@ -30,7 +32,7 @@ public class GenericProperty<T> extends Property<T> {
     }
 
     @Override
-    public T setValueFromRawString(String rawValue) {
+    public T setValueFromRawString(String rawValue) throws ParseException {
         return propValue = parser.parse(rawValue);
     }
 }
