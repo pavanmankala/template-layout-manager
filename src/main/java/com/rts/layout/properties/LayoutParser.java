@@ -16,8 +16,8 @@ import java.util.regex.Matcher;
 public class LayoutParser implements GenericValueParser<Layout> {
     @Override
     public Layout parse(String rawString) throws ParseException {
-        int columns = -1, width = 0, lastAreaEnd = -1, currRow = 0, currCol = 0;
-        List<char[]> layoutRows = new ArrayList<char[]>(30);
+        int columns = -1;
+        List<char[]> layoutRowsList = new ArrayList<char[]>(30);
         Matcher lineMatcher = LINE_PATTERN.matcher(rawString);
 
         while (lineMatcher.find()) {
@@ -27,17 +27,23 @@ public class LayoutParser implements GenericValueParser<Layout> {
             if (columns == -1) {
                 columns = charArr.length;
             } else if (columns != charArr.length) {
-                throw new ParseException("Error parsing layout", layoutRows.size() + 1);
+                throw new ParseException("Error parsing layout", layoutRowsList.size() + 1);
             }
 
-            layoutRows.add(charArr);
+            layoutRowsList.add(charArr);
         }
 
-        LayoutArea[][] totalArea = new LayoutArea[layoutRows.size()][columns];
+        char[][] layoutRows = new char[layoutRowsList.size()][columns];
+
+        for (int row = 0; row < layoutRowsList.size(); row++) {
+            layoutRows[row] = layoutRowsList.get(row);
+        }
+
+        LayoutArea[][] totalArea = new LayoutArea[layoutRows.length][columns];
 
         LayoutArea currArea = null;
 
-        char[] lastRow = layoutRows.get(layoutRows.size() - 1);
+        char[] lastRow = layoutRows[layoutRows.length - 1];
 
         for (int i = 0; i < lastRow.length; i++) {
             if (lastRow[i] == '%') {
@@ -45,8 +51,9 @@ public class LayoutParser implements GenericValueParser<Layout> {
             }
         }
 
-        for (int row = 0; row < layoutRows.size(); row++) {
-            char[] currLayoutRow = layoutRows.get(row);
+        // Row-wise
+        for (int row = 0; row < layoutRows.length; row++) {
+            char[] currLayoutRow = layoutRows[row];
             boolean useNewArea = false;
 
             if (currLayoutRow[columns - 1] == '%') {
@@ -65,7 +72,54 @@ public class LayoutParser implements GenericValueParser<Layout> {
                 currArea = ((row == 0 || useNewArea) ? currArea : totalArea[row - 1][col]);
                 totalArea[row][col] = currArea;
             }
-            System.out.println(Arrays.toString(totalArea[row]));;
+        }
+
+        // Column-wise
+        char[][] transpose = new char[columns][layoutRows.length];
+
+        for (int i = 0; i< columns ; i++) {
+            for (int j = layoutRows.length - 1, tCol = 0; j > -1; j--, tCol++) {
+                char c = layoutRows[j][i];
+                switch (c) {
+                    case '-':
+                        c = '|';
+                        break;
+                    case '|':
+                        c = '-';
+                        break;
+                }
+                transpose[i][tCol] = c;
+            }
+        }
+
+        lastRow = transpose[transpose.length - 1];
+
+        for (int i = 0; i < lastRow.length; i++) {
+            if (lastRow[i] == '%') {
+                lastRow[i] = '-';
+            }
+        }
+
+        for (int row = 0; row < transpose.length; row++) {
+            char[] currLayoutRow = transpose[row];
+            boolean useNewArea = false;
+
+            if (currLayoutRow[columns - 1] == '%') {
+                currLayoutRow[columns - 1] = '|';
+            }
+
+            for (int col = 0; col < currLayoutRow.length; col++) {
+                if (currLayoutRow[col] == '%' && currLayoutRow[col + 1] == '-') {
+                    totalArea[row][col] = currArea = new LayoutArea();
+                    useNewArea = true;
+                    continue;
+                } else if (currLayoutRow[col] == '%' && currLayoutRow[col + 1] != '-') {
+                    useNewArea = false;
+                }
+
+                currArea = ((row == 0 || useNewArea) ? currArea : totalArea[row - 1][col]);
+                totalArea[row][col] = currArea;
+            }
         }
 
         return null;
