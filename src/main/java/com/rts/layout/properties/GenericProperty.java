@@ -3,18 +3,18 @@
  */
 package com.rts.layout.properties;
 
-import com.rts.property.PropertyKey;
+import com.rts.property.Property;
 
 /**
  * @author p.mankala
  *
  */
-public class GenericPropertyKey<T> extends PropertyKey<T> {
+public class GenericProperty<T> extends Property<T> {
     private final String                propKey;
     private T                           propValue;
     private final GenericValueParser<T> parser;
 
-    public GenericPropertyKey(GenericValueParser<T> parser, String key) {
+    public GenericProperty(GenericValueParser<T> parser, String key) {
         propKey = key;
         this.parser = parser;
     }

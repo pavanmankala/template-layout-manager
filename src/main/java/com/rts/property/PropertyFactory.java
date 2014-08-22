@@ -8,5 +8,5 @@ package com.rts.property;
  *
  */
 public interface PropertyFactory {
-    PropertyKey<?> createTemplateProperty(String rawPropertyName);
+    Property<?> createTemplateProperty(String rawPropertyName);
 }

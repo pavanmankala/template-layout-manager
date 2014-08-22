@@ -12,8 +12,8 @@ import com.rts.layout.properties.TemplateLayoutPropertyFactory;
 public class PropertiesReaderTest {
     @Test
     public void testLineReader() {
-        PropertiesReader reader = new PropertiesReader(new TemplateLayoutPropertyFactory());
-        Iterable<PropertyKey<?>> keys = null;
+        PropertyReader reader = new PropertyReader(new TemplateLayoutPropertyFactory());
+        Iterable<Property<?>> keys = null;
 
         try {
             keys = reader.read(PropertiesReaderTest.class
@@ -23,7 +23,7 @@ public class PropertiesReaderTest {
             Assert.fail(e.getMessage());
         }
 
-        for (PropertyKey<?> key : keys) {
+        for (Property<?> key : keys) {
             System.out.println(key);
         }
     }

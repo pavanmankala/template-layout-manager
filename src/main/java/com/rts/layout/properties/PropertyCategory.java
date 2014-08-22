@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 import com.rts.layout.properties.enums.Anchor;
 import com.rts.layout.properties.enums.Size;
 import com.rts.property.PropertyCreator;
-import com.rts.property.PropertyKey;
+import com.rts.property.Property;
 
 /**
  * @author p.mankala
@@ -21,18 +21,18 @@ import com.rts.property.PropertyKey;
 public enum PropertyCategory implements PropertyCreator {
     Anchor(new PropertyCreator() {
         @Override
-        public PropertyKey<?> createPropertyKey(String rawPropName) {
-            return new GenericPropertyKey<Anchor>(new EnumParser<Anchor>(Anchor.class), rawPropName);
+        public Property<?> createProperty(String rawPropName) {
+            return new GenericProperty<Anchor>(new EnumParser<Anchor>(Anchor.class), rawPropName);
         }
     }), Layout(new PropertyCreator() {
         @Override
-        public PropertyKey<?> createPropertyKey(String rawPropName) {
+        public Property<?> createProperty(String rawPropName) {
             return null;
         }
     }), Area(new PropertyCreator() {
         @Override
-        public PropertyKey<?> createPropertyKey(String rawPropName) {
-            return new GenericPropertyKey<Dimension>(new GenericValueParser<Dimension>() {
+        public Property<?> createProperty(String rawPropName) {
+            return new GenericProperty<Dimension>(new GenericValueParser<Dimension>() {
                 private final Pattern dimPattern =
                                                          Pattern.compile("\\s*(\\d+)\\s*[xX]\\s*(\\d+)\\s*");
 
@@ -51,8 +51,8 @@ public enum PropertyCategory implements PropertyCreator {
         }
     }), Mapping(new PropertyCreator() {
         @Override
-        public PropertyKey<?> createPropertyKey(String rawPropName) {
-            return new GenericPropertyKey<Map<String, String>>(
+        public Property<?> createProperty(String rawPropName) {
+            return new GenericProperty<Map<String, String>>(
                     new GenericValueParser<Map<String, String>>() {
                         private final Pattern mapPattern =
                                                                  Pattern.compile("\\s*(.*?)\\s*\\-\\>\\s*(.*)\\s*");
@@ -78,13 +78,13 @@ public enum PropertyCategory implements PropertyCreator {
         }
     }), Size(new PropertyCreator() {
         @Override
-        public PropertyKey<?> createPropertyKey(String rawPropName) {
-            return new GenericPropertyKey<Size>(new EnumParser<Size>(Size.class), rawPropName);
+        public Property<?> createProperty(String rawPropName) {
+            return new GenericProperty<Size>(new EnumParser<Size>(Size.class), rawPropName);
         }
     }), Fill(new PropertyCreator() {
         @Override
-        public PropertyKey<?> createPropertyKey(String rawPropName) {
-            return new GenericPropertyKey<Float>(new GenericValueParser<Float>() {
+        public Property<?> createProperty(String rawPropName) {
+            return new GenericProperty<Float>(new GenericValueParser<Float>() {
                 @Override
                 public Float parse(String rawString) {
                     return Float.parseFloat(rawString);
@@ -93,8 +93,8 @@ public enum PropertyCategory implements PropertyCreator {
         }
     }), Default(new PropertyCreator() {
         @Override
-        public PropertyKey<?> createPropertyKey(String rawPropName) {
-            return new GenericPropertyKey<String>(new GenericValueParser<String>() {
+        public Property<?> createProperty(String rawPropName) {
+            return new GenericProperty<String>(new GenericValueParser<String>() {
                 @Override
                 public String parse(String rawString) {
                     return rawString;
@@ -111,7 +111,7 @@ public enum PropertyCategory implements PropertyCreator {
     }
 
     @Override
-    public PropertyKey<?> createPropertyKey(String rawPropName) {
-        return rootCreator.createPropertyKey(rawPropName);
+    public Property<?> createProperty(String rawPropName) {
+        return rootCreator.createProperty(rawPropName);
     }
 }

@@ -1,7 +1,7 @@
 package com.rts.property;
 
 
-public abstract class PropertyKey<T> {
+public abstract class Property<T> {
     public abstract String getPropertyName();
 
     public abstract T getPropertyValue();
@@ -17,7 +17,7 @@ public abstract class PropertyKey<T> {
             return true;
         } else {
             try {
-                PropertyKey<?> other = PropertyKey.class.cast(obj);
+                Property<?> other = Property.class.cast(obj);
                 return this.getPropertyName().equals(other.getPropertyName());
             } catch (ClassCastException e) {
                 return false;

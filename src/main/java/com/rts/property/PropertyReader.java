@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class PropertiesReader {
+public class PropertyReader {
     private static final String   MULTI_LINE_VALUE_PATTERN = "\\s*(.*?)\\s*(\\\\)?\\s*$";
     /*@formatter:off*/
     private final Pattern linePattern           = Pattern.compile("^(.*)$", Pattern.MULTILINE),
@@ -21,15 +21,15 @@ public class PropertiesReader {
     /*@formatter:on*/
     private final PropertyFactory factory;
 
-    public PropertiesReader(PropertyFactory factory) {
+    public PropertyReader(PropertyFactory factory) {
         this.factory = factory;
     }
 
-    public Iterable<PropertyKey<?>> read(InputStream stream) throws IOException, ParseException {
+    public Iterable<Property<?>> read(InputStream stream) throws IOException, ParseException {
         return read(new InputStreamReader(stream, Charset.forName("UTF-8")));
     }
 
-    public Iterable<PropertyKey<?>> read(Reader reader) throws IOException, ParseException {
+    public Iterable<Property<?>> read(Reader reader) throws IOException, ParseException {
         char[] builder = new char[2048];
         int readInt;
         int pos = 0;
@@ -50,8 +50,8 @@ public class PropertiesReader {
         return parseFile(new CharArraySequence(builder, 0, pos));
     }
 
-    private Collection<PropertyKey<?>> parseFile(CharSequence sequence) throws ParseException {
-        List<PropertyKey<?>> retList = new ArrayList<PropertyKey<?>>();
+    private Collection<Property<?>> parseFile(CharSequence sequence) throws ParseException {
+        List<Property<?>> retList = new ArrayList<Property<?>>();
         Matcher lineMatcher = linePattern.matcher(sequence);
         int lineNo = 0;
         StringBuilder propValueBuilder = new StringBuilder();
@@ -65,7 +65,7 @@ public class PropertiesReader {
             }
 
             Matcher propMatcher = propertyPattern.matcher(line);
-            PropertyKey<?> templatePropertyKey;
+            Property<?> templatePropertyKey;
 
             if (propMatcher.find()) {
                 boolean hasMultiLineValue = propMatcher.group(3) != null;
