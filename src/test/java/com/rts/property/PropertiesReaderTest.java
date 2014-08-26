@@ -16,8 +16,7 @@ public class PropertiesReaderTest {
         Iterable<Property<?>> keys = null;
 
         try {
-            keys = reader.read(PropertiesReaderTest.class
-                            .getResourceAsStream("/swing-layout.layout"));
+            keys = reader.read(PropertiesReaderTest.class.getResourceAsStream("/swing-layout.layout"));
         } catch (Throwable e) {
             e.printStackTrace();
             Assert.fail(e.getMessage());

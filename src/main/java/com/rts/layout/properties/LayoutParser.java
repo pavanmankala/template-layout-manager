@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.rts.layout.properties;
 
 import java.text.ParseException;
@@ -11,7 +8,7 @@ import java.util.regex.Matcher;
 
 /**
  * @author p.mankala
- * 
+ *
  */
 public class LayoutParser implements GenericValueParser<Layout> {
     @Override
@@ -44,20 +41,24 @@ public class LayoutParser implements GenericValueParser<Layout> {
         for (int i = 0; i < columns; i++) {
             for (int j = 0; j < layoutRows.length; j++) {
                 char c = layoutRows[j][i];
+
                 switch (c) {
-                case '-':
-                    c = '|';
-                    break;
-                case '|':
-                    c = '-';
-                    break;
+                    case '-':
+                        c = '|';
+
+                        break;
+
+                    case '|':
+                        c = '-';
+
+                        break;
                 }
+
                 transpose[i][j] = c;
             }
         }
 
         LayoutArea[][] totalArea = new LayoutArea[layoutRows.length][columns];
-
         char[] lastRow = layoutRows[layoutRows.length - 1];
 
         for (int i = 0; i < lastRow.length; i++) {
@@ -77,24 +78,26 @@ public class LayoutParser implements GenericValueParser<Layout> {
             }
 
             for (int col = 0; col < currLayoutRow.length; col++) {
-                if (currLayoutRow[col] == '%' && currLayoutRow[col + 1] == '-') {
-                    totalArea[row][col] = currArea = new LayoutArea();
-                    useNewArea = true;
-                    continue;
-                } else if (currLayoutRow[col] == '%' && currLayoutRow[col + 1] != '-') {
-                    useNewArea = false;
+                if (currLayoutRow[col] == '%') {
+                    switch (currLayoutRow[col + 1]) {
+                        case '-':
+                            totalArea[row][col] = currArea = new LayoutArea();
+                            useNewArea = true;
+
+                            continue;
+                        case '#':
+                            throw new ParseException("parsing failed", row);
+                        default:
+                            useNewArea = false;
+                            break;
+                    }
                 }
 
-                currArea = ((row == 0 || useNewArea) ? currArea : totalArea[row - 1][col]);
+                currArea = (((row == 0) || useNewArea) ? currArea : totalArea[row - 1][col]);
                 totalArea[row][col] = currArea;
             }
         }
-        for (int i = 0; i < totalArea.length; i++) {
-            for (int j = 0 ; j < columns; j++) {
-                System.out.print(totalArea[i][j]);
-            }
-            System.out.println();
-        }
+
         // Column-wise
         lastRow = transpose[transpose.length - 1];
 
@@ -113,11 +116,18 @@ public class LayoutParser implements GenericValueParser<Layout> {
             }
 
             for (int col = 0; col < currLayoutRow.length; col++) {
-                if (currLayoutRow[col] == '%' && currLayoutRow[col + 1] == '-') {
-                    useExisting = true;
-                    continue;
-                } else if (currLayoutRow[col] == '%' && currLayoutRow[col + 1] != '-') {
-                    useExisting = false;
+                if (currLayoutRow[col] == '%') {
+                    switch (currLayoutRow[col + 1]) {
+                        case '-':
+                            useExisting = true;
+
+                            continue;
+                        case '#':
+                            throw new ParseException("parsing failed", col);
+                        default:
+                            useExisting = false;
+                            break;
+                    }
                 }
 
                 if (!useExisting) {
@@ -126,11 +136,9 @@ public class LayoutParser implements GenericValueParser<Layout> {
             }
         }
 
-        for (int i = 0; i < totalArea.length; i++) {
-            for (int j = 0 ; j < columns; j++) {
-                System.out.print(totalArea[i][j]);
-            }
-            System.out.println();
+        // Trim layout area
+        for (int i = 0; i < totalArea.length - 1; i++) {
+            totalArea[i] = Arrays.copyOf(totalArea[i], columns - 1);
         }
 
         return null;
